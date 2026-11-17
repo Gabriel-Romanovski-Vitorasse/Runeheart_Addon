@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+
+[[mods]]
+modId="runeheart"
+version="${file.jarVersion}"
+displayName="Runeheart (addon do Block Clover)"
+authors="Gabriel"
+description='''
+Mana natural do ambiente e Mana Method para o Block Clover: absorver a mana da natureza e montar magias com runas e arranjos.
+'''
+
+[[dependencies.runeheart]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.runeheart]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.runeheart]]
+    modId="block_clover"
+    mandatory=false
+    versionRange="[0.4,)"
+    ordering="AFTER"
+    side="BOTH"

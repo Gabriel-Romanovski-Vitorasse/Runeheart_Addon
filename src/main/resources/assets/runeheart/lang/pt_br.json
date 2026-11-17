@@ -1,0 +1,9 @@
+{
+  "runeheart.mod_name": "Runeheart",
+  "config.runeheart.general": "Geral",
+  "config.runeheart.general.debug_log": "Logs de diagnóstico",
+  "config.runeheart.general.debug_log.tooltip": "true = escreve no latest.log o que o Runeheart está fazendo (marcador [Runeheart]), para investigar problemas",
+  "config.runeheart.visual": "Visual e HUD",
+  "config.runeheart.visual.show_hud": "Mostrar o HUD de mana natural",
+  "config.runeheart.visual.show_hud.tooltip": "Mostrar o medidor de mana natural quando o Mana Sense estiver ativo"
+}
