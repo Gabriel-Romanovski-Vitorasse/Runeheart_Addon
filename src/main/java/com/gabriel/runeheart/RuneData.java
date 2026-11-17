@@ -82,12 +82,36 @@ public final class RuneData {
         root(p).putInt("selected", Math.floorMod(slot, slots(p)));
     }
 
+    // ---------- inscri\u00e7\u00f5es (runas nas magias do Block Clover) ----------
+
+    private static CompoundNBT inscriptions(PlayerEntity p) {
+        CompoundNBT r = root(p);
+        if (!r.contains("insc", 10)) r.put("insc", new CompoundNBT());
+        return r.getCompound("insc");
+    }
+
+    public static Inscription inscription(PlayerEntity p, String spellKey) {
+        return Inscription.parse(inscriptions(p).getString(spellKey));
+    }
+
+    public static void setInscription(PlayerEntity p, String spellKey, Inscription i) {
+        if (i == null || i.size() == 0) inscriptions(p).remove(spellKey);
+        else inscriptions(p).putString(spellKey, i.encode());
+    }
+
     /** Manda ao cliente o estado atual (para a tela de arranjos e o aviso do slot escolhido). */
     public static void sync(ServerPlayerEntity p) {
         String[] texts = new String[MAX_SLOTS];
         for (int i = 0; i < MAX_SLOTS; i++) texts[i] = slotText(p, i);
+        java.util.List<BlockCloverBridge.Spell> spells = BlockCloverBridge.equippedSpells(p);
+        String[] keys = new String[spells.size()], names = new String[spells.size()], insc = new String[spells.size()];
+        for (int i = 0; i < spells.size(); i++) {
+            keys[i] = spells.get(i).key;
+            names[i] = spells.get(i).name;
+            insc[i] = inscriptions(p).getString(keys[i]);
+        }
         RuneheartMod.CHANNEL.send(PacketDistributor.PLAYER.with(() -> p),
-                new RuneSyncPacket(known(p), texts, selected(p), maxRunes(p), slots(p), casts(p)));
+                new RuneSyncPacket(known(p), texts, selected(p), maxRunes(p), slots(p), casts(p), keys, names, insc));
     }
 
     @SubscribeEvent

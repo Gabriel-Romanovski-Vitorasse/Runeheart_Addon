@@ -2,6 +2,12 @@
 
 ## 0.1.0 (não lançado)
 
+- **Inscrição de runas nas magias do Block Clover** (todas menos Anti-Magia e Tempo): na tela de runas, escolha uma
+  magia equipada e inscreva runas nela. Potência aumenta o dano, Ampliação espalha parte dele, Múltiplo cria cópias
+  dos projéteis, Duração aumenta o alcance, Gatilho deixa uma armadilha onde o projétil bate, e Selo, Impulso, Cura e
+  Barreira somam efeitos ao acerto. A força vem da mana natural (recarga a cada 2 s, 3 de mana natural por runa).
+  O Block Clover não é modificado: o addon reage ao dano de magia (que diz de qual magia veio) e aos projéteis.
+- Protocolo de rede 4.
 - **Mana Method.** 10 runas (núcleo: Disparo, Barreira, Selo, Cura, Impulso; modificadoras: Ampliação, Duração,
   Potência, Gatilho, Múltiplo). Arranjos montados na tela de arranjos (J), trocados com N e conjurados com Z, com
   canalização de 0,5 s por runa que quebra com dano. A mana do jogador só acende (4% do máximo); a força vem da

@@ -23,7 +23,7 @@ public class RuneheartMod {
      * Versão do protocolo de rede. Suba o número sempre que um pacote mudar de formato: cliente e servidor
      * precisam ter o addon na MESMA versão, e quem tiver outra é recusado ao entrar, com uma mensagem clara.
      */
-    private static final String PROTOCOL = "3";
+    private static final String PROTOCOL = "4";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "main"), () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals);

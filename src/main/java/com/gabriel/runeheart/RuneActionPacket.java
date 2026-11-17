@@ -8,10 +8,10 @@ import java.util.function.Supplier;
 
 /**
  * Cliente -> servidor, ações do Mana Method: salvar o arranjo de um slot, escolher um slot, trocar para o próximo,
- * ou conjurar o escolhido.
+ * conjurar o escolhido, pedir o estado de novo ou inscrever runas numa magia ({@code text} = "chave|runas").
  */
 public class RuneActionPacket {
-    public static final int SAVE = 0, SELECT = 1, NEXT = 2, CAST = 3;
+    public static final int SAVE = 0, SELECT = 1, NEXT = 2, CAST = 3, REFRESH = 4, INSCRIBE = 5;
 
     final int action, slot;
     final String text;

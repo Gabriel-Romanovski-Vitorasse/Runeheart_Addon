@@ -48,6 +48,8 @@ public final class ManaMethod {
             case RuneActionPacket.SELECT: select(player, slot); break;
             case RuneActionPacket.NEXT: select(player, RuneData.selected(player) + 1); break;
             case RuneActionPacket.CAST: cast(player); break;
+            case RuneActionPacket.REFRESH: RuneData.sync(player); break;
+            case RuneActionPacket.INSCRIBE: inscribe(player, text); break;
             default: break;
         }
     }
@@ -65,6 +67,32 @@ public final class ManaMethod {
         }
         RuneData.setSlot(player, slot, a);
         RuneData.select(player, slot);
+        RuneData.sync(player);
+    }
+
+    /** Inscreve runas numa magia equipada do Block Clover ({@code text} = "chave|runas"; runas vazias apaga). */
+    private static void inscribe(ServerPlayerEntity player, String text) {
+        int bar = text.indexOf('|');
+        if (bar <= 0) return;
+        String key = text.substring(0, bar);
+        boolean equipped = false;
+        for (BlockCloverBridge.Spell s : BlockCloverBridge.equippedSpells(player)) if (s.key.equals(key)) equipped = true;
+        if (!equipped) {
+            Msg.bar(player, TextFormatting.RED, "insc_not_equipped");
+            RuneData.sync(player);
+            return;
+        }
+        Inscription i = Inscription.parse(text.substring(bar + 1));
+        if (i != null) {
+            String problem = i.problem(RuneData.maxRunes(player), RuneData.known(player));
+            if (problem != null) {
+                Msg.bar(player, TextFormatting.RED, problem, RuneData.maxRunes(player));
+                RuneData.sync(player);
+                return;
+            }
+        }
+        RuneData.setInscription(player, key, i);
+        Msg.bar(player, TextFormatting.AQUA, i == null ? "insc_cleared" : "insc_saved");
         RuneData.sync(player);
     }
 

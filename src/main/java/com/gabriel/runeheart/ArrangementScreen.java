@@ -99,6 +99,8 @@ public class ArrangementScreen extends Screen {
             refresh();
         }));
         addButton(new Button(cx + 50 / 2 + GAP, y, 50, H, new TranslationTextComponent("gui.done"), btn -> onClose()));
+        addButton(new Button(cx - 70, y + H + GAP, 140, H, new TranslationTextComponent("screen.runeheart.to_inscriptions"),
+                btn -> minecraft.setScreen(new InscriptionScreen())));
         refresh();
     }
 

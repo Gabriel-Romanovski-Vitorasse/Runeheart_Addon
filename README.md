@@ -3,7 +3,8 @@
 Add-on para o **Block Clover** (Minecraft Forge 1.16.5) que traz as técnicas de mana do Reino Heart: a **mana
 natural** do ambiente e o **Mana Method**, magias montadas com runas e arranjos que tiram a força dessa mana.
 
-> Projeto em começo: já tem a **mana natural**, a **absorção** e o **Mana Method** (falta só o arranjo fixo).
+> Projeto em começo: já tem a **mana natural**, a **absorção**, o **Mana Method** e a **inscrição de runas nas
+> magias do Block Clover** (falta o arranjo fixo).
 
 ## Mana natural (pronta)
 
@@ -73,6 +74,34 @@ força 1, densidade 50 = metade. Abaixo de densidade 10 o arranjo se desfaz.
 - **Maestria:** começa com arranjos de 2 runas e 3 slots; com 50 conjurações, 3 runas; com 200, 5 runas e 5 slots.
 - **Comandos:** `/runeheart runes` mostra suas runas e a maestria; operadores têm `/runeheart runes grant <runa|all>`,
   `reset` e `casts <n>` para testar.
+
+## Inscrição nas magias do Block Clover (pronta)
+
+As runas também melhoram as **magias do próprio Block Clover**. A magia faz o papel da runa núcleo, e as runas
+inscritas nela valem sozinhas toda vez que você a lança. Vale para todos os atributos (Raio, Fogo, Água, Vento...),
+**menos Anti-Magia e Tempo**.
+
+- **Inscrever:** abra a tela de runas (**J**) e clique em **Inscrição nas magias**. Aparecem as magias equipadas na
+  combat bar; escolha uma, marque as runas e salve. Cada magia guarda as suas runas. O limite de runas é o da
+  maestria (2, 3 ou 5).
+- **Força:** vem da mana natural do lugar, como no Mana Method. A cada 2 segundos de uso a inscrição é "recarregada":
+  gasta 3 de mana natural por runa e conta como uma conjuração para a maestria. Abaixo de densidade 10 as runas
+  apagam e a magia sai normal.
+
+| Runa inscrita | Efeito na magia |
+|---|---|
+| Potência | dano dos acertos ×1,6 (na densidade cheia, proporcional à mana natural) |
+| Ampliação | metade do dano atinge quem está em volta do alvo |
+| Múltiplo | magias de projétil soltam 2 cópias em leque |
+| Duração | o projétil vai mais longe; Selo dura mais |
+| Gatilho | onde o projétil bate no chão fica uma armadilha que repete o golpe em quem pisar |
+| Selo | quem é atingido fica preso (lentidão forte e fraqueza) |
+| Impulso | o acerto empurra o alvo |
+| Cura | acertar cura você (até 1 vez por segundo) |
+| Barreira | acertar te dá absorção (até 1 vez por segundo) |
+
+O Disparo não pode ser inscrito (quem dispara é a própria magia). Os números ficam nas seções `inscription` e
+`mana_method` da config do servidor.
 
 ## Teclas
 
