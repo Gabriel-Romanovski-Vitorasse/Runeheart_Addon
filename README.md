@@ -3,8 +3,7 @@
 Add-on para o **Block Clover** (Minecraft Forge 1.16.5) que traz as técnicas de mana do Reino Heart: a **mana
 natural** do ambiente e o **Mana Method**, magias montadas com runas e arranjos que tiram a força dessa mana.
 
-> Projeto em começo: já tem a **mana natural** (densidade, esgotamento, HUD e partículas). A absorção e o Mana
-> Method chegam nas próximas versões.
+> Projeto em começo: já tem a **mana natural** e a **absorção**. O Mana Method chega nas próximas versões.
 
 ## Mana natural (pronta)
 
@@ -26,9 +25,25 @@ Cada chunk tem uma densidade de mana natural de 0 a 100:
 - **Comando** `/runeheart mana`: mostra a densidade de onde você está e as partes da conta. Para testar, operadores
   têm `/runeheart mana drain <quanto>` e `/runeheart mana refill`.
 
+## Absorção (pronta)
+
+Segurando a tecla de **concentração** (padrão **V**, troque em Opções → Controles → Runeheart), parado, você puxa a
+mana natural do lugar para a sua própria mana.
+
+- **Sintonia primeiro:** para aprender, fique parado com o **Mana Sense** do Block Clover ligado num lugar com
+  densidade 60 ou mais, somando 2 minutos (não precisa ser seguido; a barra mostra o progresso). Depois disso a
+  absorção fica liberada para sempre, inclusive depois de morrer.
+- **Quanto rende:** com densidade 100, 3% da sua mana máxima por segundo; com 50, metade disso. Cada segundo gasta 2
+  de mana natural do chunk, então ficar parado no mesmo lugar acaba esgotando ele.
+- **Quebra:** se mexer ou levar dano quebra a concentração (solte e segure a tecla de novo).
+- **Sobrecarga:** abaixo de densidade 10 (deserto, Nether, lugar já esgotado), concentrar não rende mana: dá náusea e
+  1 de dano a cada 2 segundos.
+- Visual: runas voando até você, pólen no chão e um zumbido baixo.
+- **Comandos:** `/runeheart attune` mostra o progresso da sintonia; operadores têm `/runeheart attune grant` e
+  `/runeheart attune reset` para testar.
+
 ## O que vai ter
 
-- **Absorção:** parado e concentrado, o jogador recupera mana mais rápido em lugares ricos.
 - **Mana Method:** runas núcleo (Disparo, Barreira, Selo, Cura, Impulso) e modificadoras (Ampliação, Duração,
   Potência, Gatilho, Múltiplo) montadas em arranjos numa tela com slots. A própria mana só acende o arranjo; a força
   vem da mana natural do lugar.

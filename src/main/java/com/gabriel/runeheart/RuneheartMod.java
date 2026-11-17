@@ -17,7 +17,7 @@ public class RuneheartMod {
      * Versão do protocolo de rede. Suba o número sempre que um pacote mudar de formato: cliente e servidor
      * precisam ter o addon na MESMA versão, e quem tiver outra é recusado ao entrar, com uma mensagem clara.
      */
-    private static final String PROTOCOL = "1";
+    private static final String PROTOCOL = "2";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "main"), () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals);
@@ -27,5 +27,6 @@ public class RuneheartMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent e) -> BlockCloverBridge.logStatus());
         MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> RuneCommand.register(e.getDispatcher()));
         CHANNEL.registerMessage(0, DensityPacket.class, DensityPacket::encode, DensityPacket::decode, DensityPacket::handle);
+        CHANNEL.registerMessage(1, FocusPacket.class, FocusPacket::encode, FocusPacket::decode, FocusPacket::handle);
     }
 }
