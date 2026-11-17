@@ -1,6 +1,8 @@
 package com.gabriel.runeheart;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,5 +25,7 @@ public class RuneheartMod {
     public RuneheartMod() {
         RuneConfig.register();
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent e) -> BlockCloverBridge.logStatus());
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> RuneCommand.register(e.getDispatcher()));
+        CHANNEL.registerMessage(0, DensityPacket.class, DensityPacket::encode, DensityPacket::decode, DensityPacket::handle);
     }
 }

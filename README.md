@@ -3,14 +3,31 @@
 Add-on para o **Block Clover** (Minecraft Forge 1.16.5) que traz as técnicas de mana do Reino Heart: a **mana
 natural** do ambiente e o **Mana Method**, magias montadas com runas e arranjos que tiram a força dessa mana.
 
-> Projeto em começo: esta versão tem só a base (projeto, configuração e ponte com o Block Clover). As técnicas
-> chegam nas próximas versões.
+> Projeto em começo: já tem a **mana natural** (densidade, esgotamento, HUD e partículas). A absorção e o Mana
+> Method chegam nas próximas versões.
+
+## Mana natural (pronta)
+
+Cada chunk tem uma densidade de mana natural de 0 a 100:
+
+| Fator | Efeito |
+|---|---|
+| Bioma (base) | Selva, floresta de flores, floresta escura: 75 · Cogumelos: 60 · Floresta, taiga: 55 · Pântano: 50 · Rio: 45 · Montanhas: 40 · Planície: 38 · Savana: 35 · Praia, gelo: 25 · Oceano: 20 · Badlands: 15 · Deserto: 10 · Nether: 5 · End: 0 |
+| Vegetação | até +20 (folhas, troncos, flores, plantas; grama pura vale pouco) |
+| Água corrente ou cachoeira | +10 |
+| Tempestade com raios | +15 enquanto durar (não vale no Nether nem no End) |
+| Construções | até -30 (tábuas, tijolos, vidro, ferro, redstone, escadas, cercas...) |
+
+- **Esgota e volta:** puxar mana baixa a densidade do chunk, que volta sozinha em 5 minutos. O terreno é recontado a
+  cada 5 minutos, então derrubar uma floresta ou construir uma cidade muda a mana do lugar.
+- **HUD:** com o Mana Sense do Block Clover ligado, aparece um medidor no canto da tela com a densidade (a barra
+  cinza é o cheio do lugar; a verde, o que tem agora) e uma seta quando ela sobe ou desce.
+- **Partículas:** onde a densidade passa de 70, um pólen brilhante aparece no ar.
+- **Comando** `/runeheart mana`: mostra a densidade de onde você está e as partes da conta. Para testar, operadores
+  têm `/runeheart mana drain <quanto>` e `/runeheart mana refill`.
 
 ## O que vai ter
 
-- **Mana natural:** cada região tem uma densidade de mana de 0 a 100, conforme o bioma, a vegetação, a água, o clima
-  e as construções em volta. Usar a mana de um lugar esgota esse lugar por alguns minutos.
-- **Medidor no HUD:** com o Mana Sense do Block Clover ligado, mostra a densidade do lugar.
 - **Absorção:** parado e concentrado, o jogador recupera mana mais rápido em lugares ricos.
 - **Mana Method:** runas núcleo (Disparo, Barreira, Selo, Cura, Impulso) e modificadoras (Ampliação, Duração,
   Potência, Gatilho, Múltiplo) montadas em arranjos numa tela com slots. A própria mana só acende o arranjo; a força
