@@ -24,7 +24,13 @@ public final class RuneCommand {
                                         .executes(c -> drain(c.getSource().getPlayerOrException(),
                                                 FloatArgumentType.getFloat(c, "amount")))))
                         .then(Commands.literal("refill").requires(s -> s.hasPermission(2))
-                                .executes(c -> refill(c.getSource().getPlayerOrException())))));
+                                .executes(c -> refill(c.getSource().getPlayerOrException()))))
+                .then(Commands.literal("attune")
+                        .executes(c -> attuneStatus(c.getSource().getPlayerOrException()))
+                        .then(Commands.literal("grant").requires(s -> s.hasPermission(2))
+                                .executes(c -> attuneSet(c.getSource().getPlayerOrException(), true)))
+                        .then(Commands.literal("reset").requires(s -> s.hasPermission(2))
+                                .executes(c -> attuneSet(c.getSource().getPlayerOrException(), false)))));
     }
 
     private static int show(ServerPlayerEntity p) {
@@ -44,6 +50,23 @@ public final class RuneCommand {
         float taken = NaturalMana.drain(p.getLevel(), p.blockPosition(), amount);
         Msg.chat(p, TextFormatting.YELLOW, "nm_drained", Msg.f1(taken));
         return Math.round(taken);
+    }
+
+    private static int attuneStatus(ServerPlayerEntity p) {
+        if (Absorption.isAttuned(p)) {
+            Msg.chat(p, TextFormatting.GREEN, "attune_status_done");
+            return 1;
+        }
+        Msg.chat(p, TextFormatting.GRAY, "attune_status", p.getPersistentData().getInt(Absorption.TAG_ATTUNE_SECONDS),
+                RuneConfig.ABS_ATTUNEMENT_SECONDS.get(), RuneConfig.ABS_ATTUNEMENT_DENSITY.get());
+        return 0;
+    }
+
+    private static int attuneSet(ServerPlayerEntity p, boolean attuned) {
+        p.getPersistentData().putBoolean(Absorption.TAG_ATTUNED, attuned);
+        p.getPersistentData().putInt(Absorption.TAG_ATTUNE_SECONDS, 0);
+        Msg.chat(p, TextFormatting.YELLOW, attuned ? "attune_granted" : "attune_reset");
+        return 1;
     }
 
     private static int refill(ServerPlayerEntity p) {

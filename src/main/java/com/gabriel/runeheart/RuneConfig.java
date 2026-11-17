@@ -96,6 +96,15 @@ public final class RuneConfig {
     public static final ForgeConfigSpec.DoubleValue NM_WATER_BONUS;
     public static final ForgeConfigSpec.DoubleValue NM_STORM_BONUS;
     public static final ForgeConfigSpec.DoubleValue NM_BUILDING_PENALTY;
+    public static final ForgeConfigSpec.BooleanValue ABS_ENABLED;
+    public static final ForgeConfigSpec.DoubleValue ABS_MANA_PERCENT;
+    public static final ForgeConfigSpec.DoubleValue ABS_NATURAL_COST;
+    public static final ForgeConfigSpec.IntValue ABS_OVERLOAD_BELOW;
+    public static final ForgeConfigSpec.DoubleValue ABS_OVERLOAD_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue ABS_MOVE_TOLERANCE;
+    public static final ForgeConfigSpec.BooleanValue ABS_REQUIRE_ATTUNEMENT;
+    public static final ForgeConfigSpec.IntValue ABS_ATTUNEMENT_SECONDS;
+    public static final ForgeConfigSpec.IntValue ABS_ATTUNEMENT_DENSITY;
     public static final ForgeConfigSpec.IntValue HUD_X;
     public static final ForgeConfigSpec.IntValue HUD_Y;
     public static final ForgeConfigSpec.BooleanValue PARTICLES;
@@ -117,6 +126,18 @@ public final class RuneConfig {
         NM_WATER_BONUS = dbl(s, "water_bonus", "Densidade somada quando o chunk tem \u00e1gua corrente ou cachoeira", 10.0, 0.0, 100.0);
         NM_STORM_BONUS = dbl(s, "storm_bonus", "Densidade somada durante tempestades com raios", 15.0, 0.0, 100.0);
         NM_BUILDING_PENALTY = dbl(s, "building_penalty", "Densidade tirada de um chunk tomado por constru\u00e7\u00f5es (tijolos, t\u00e1buas, vidro, ferro, redstone)", 30.0, 0.0, 100.0);
+        s.pop();
+
+        section(s, "absorption", true, "Absor\u00e7\u00e3o: segurando a tecla de concentra\u00e7\u00e3o, parado, o jogador puxa a mana natural do lugar para recarregar a pr\u00f3pria mana");
+        ABS_ENABLED = bool(s, "enabled", "Liga/desliga a absor\u00e7\u00e3o", true);
+        ABS_MANA_PERCENT = dbl(s, "mana_percent_per_second", "Mana recuperada por segundo com densidade 100, em porcentagem da mana m\u00e1xima. Cai junto com a densidade (densidade 50 = metade)", 3.0, 0.0, 100.0);
+        ABS_NATURAL_COST = dbl(s, "natural_cost_per_second", "Quanto a densidade do chunk cai por segundo de absor\u00e7\u00e3o (enquanto a mana do jogador est\u00e1 enchendo)", 2.0, 0.0, 100.0);
+        ABS_OVERLOAD_BELOW = integer(s, "overload_below", "Abaixo dessa densidade, concentrar n\u00e3o rende mana: causa n\u00e1usea e dano", 10, 0, 100);
+        ABS_OVERLOAD_DAMAGE = dbl(s, "overload_damage", "Dano a cada 2 segundos de sobrecarga", 1.0, 0.0, 20.0);
+        ABS_MOVE_TOLERANCE = dbl(s, "move_tolerance", "Quanto o jogador pode se mexer por tick (em blocos) sem quebrar a concentra\u00e7\u00e3o", 0.15, 0.0, 5.0);
+        ABS_REQUIRE_ATTUNEMENT = bool(s, "require_attunement", "true = antes de absorver, o jogador precisa 'sentir a mana natural': ficar parado com o Mana Sense ligado num lugar denso", true);
+        ABS_ATTUNEMENT_SECONDS = integer(s, "attunement_seconds", "Segundos (somados, n\u00e3o precisam ser seguidos) parado com o Mana Sense ligado num lugar denso para aprender a absor\u00e7\u00e3o", 120, 0, 36000);
+        ABS_ATTUNEMENT_DENSITY = integer(s, "attunement_density", "Densidade m\u00ednima do lugar para a sintonia avan\u00e7ar", 60, 0, 100);
         s.pop();
         SERVER_SPEC = s.build();
 
