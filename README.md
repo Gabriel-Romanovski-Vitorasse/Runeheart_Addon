@@ -3,7 +3,7 @@
 Add-on para o **Block Clover** (Minecraft Forge 1.16.5) que traz as técnicas de mana do Reino Heart: a **mana
 natural** do ambiente e o **Mana Method**, magias montadas com runas e arranjos que tiram a força dessa mana.
 
-> Projeto em começo: já tem a **mana natural** e a **absorção**. O Mana Method chega nas próximas versões.
+> Projeto em começo: já tem a **mana natural**, a **absorção** e o **Mana Method** (falta só o arranjo fixo).
 
 ## Mana natural (pronta)
 
@@ -27,7 +27,7 @@ Cada chunk tem uma densidade de mana natural de 0 a 100:
 
 ## Absorção (pronta)
 
-Segurando a tecla de **concentração** (padrão **V**, troque em Opções → Controles → Runeheart), parado, você puxa a
+Segurando a tecla de **concentração** (padrão **R**, troque em Opções → Controles → Runeheart), parado, você puxa a
 mana natural do lugar para a sua própria mana.
 
 - **Sintonia primeiro:** para aprender, fique parado com o **Mana Sense** do Block Clover ligado num lugar com
@@ -42,12 +42,52 @@ mana natural do lugar para a sua própria mana.
 - **Comandos:** `/runeheart attune` mostra o progresso da sintonia; operadores têm `/runeheart attune grant` e
   `/runeheart attune reset` para testar.
 
+## Mana Method (pronto, menos o arranjo fixo)
+
+Magias montadas com runas. Um **arranjo** tem uma runa **núcleo** (o que faz) e runas **modificadoras** (como faz).
+A sua mana só **acende** o arranjo (4% da mana máxima); a **força** vem da mana natural do lugar: densidade 100 =
+força 1, densidade 50 = metade. Abaixo de densidade 10 o arranjo se desfaz.
+
+| Núcleo | Efeito (força 1) |
+|---|---|
+| Disparo | projétil de runas que voa reto: 8 de dano |
+| Barreira | absorção (8 pontos) e resistência por 10 s |
+| Selo | prende o alvo na mira (até 16 blocos): lentidão forte e fraqueza por 4 s |
+| Cura | recupera 6 de vida |
+| Impulso | empurra o que está à frente (agachado, puxa) |
+
+| Modificadora | Efeito |
+|---|---|
+| Ampliação | área: explosão no Disparo, alvos em volta no Selo, aliados na Barreira e na Cura, todo lado no Impulso |
+| Duração | tempos ×2 (Cura ganha regeneração) |
+| Potência | força ×1,6 |
+| Gatilho | vira armadilha no chão onde você mira; dispara em quem pisar (até 3 por jogador, 60 s) |
+| Múltiplo | três disparos em leque (só com Disparo) |
+
+- **Aprender runas:** pergaminhos de runa aparecem em baús de estruturas (masmorras, templos, minas, fortalezas,
+  mansões, postos de saqueadores, tesouros, naufrágios, iglus, portais em ruínas). Clique com o botão direito para
+  aprender.
+- **Montar:** tecla **J** abre a tela de arranjos (slots, núcleo, modificadoras, salvar). **N** troca de slot.
+- **Conjurar:** tecla **Z**. Um círculo de runas se fecha no chão enquanto você canaliza (0,5 s por runa); levar dano
+  no meio quebra o arranjo e a mana de ignição se perde. Cada conjuração gasta 3 de mana natural por runa.
+- **Maestria:** começa com arranjos de 2 runas e 3 slots; com 50 conjurações, 3 runas; com 200, 5 runas e 5 slots.
+- **Comandos:** `/runeheart runes` mostra suas runas e a maestria; operadores têm `/runeheart runes grant <runa|all>`,
+  `reset` e `casts <n>` para testar.
+
+## Teclas
+
+| Tecla (padrão) | Ação |
+|---|---|
+| R | Concentrar (absorção) |
+| J | Abrir os arranjos de runas |
+| N | Próximo arranjo |
+| Z | Conjurar o arranjo |
+
+Escolhidas para não colidir com o ChronoBubble (V, B, K, Alt) nem com o Block Clover (1 a 8, G). Todas podem ser
+trocadas em Opções → Controles → Runeheart.
+
 ## O que vai ter
 
-- **Mana Method:** runas núcleo (Disparo, Barreira, Selo, Cura, Impulso) e modificadoras (Ampliação, Duração,
-  Potência, Gatilho, Múltiplo) montadas em arranjos numa tela com slots. A própria mana só acende o arranjo; a força
-  vem da mana natural do lugar.
-- **Pergaminhos de runa** achados pelo mundo para aprender runas novas.
 - **Arranjos fixos** (até 3 por jogador), como barreiras e armadilhas que ficam ativas enquanto houver mana.
 
 A mana natural só complementa a mana do jogador: as magias do Block Clover continuam gastando a mana dele.

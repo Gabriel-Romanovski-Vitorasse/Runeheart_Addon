@@ -2,7 +2,16 @@
 
 ## 0.1.0 (não lançado)
 
-- **Absorção.** Segurando a tecla de concentração (V), parado, o jogador puxa a mana natural para a própria mana:
+- **Mana Method.** 10 runas (núcleo: Disparo, Barreira, Selo, Cura, Impulso; modificadoras: Ampliação, Duração,
+  Potência, Gatilho, Múltiplo). Arranjos montados na tela de arranjos (J), trocados com N e conjurados com Z, com
+  canalização de 0,5 s por runa que quebra com dano. A mana do jogador só acende (4% do máximo); a força vem da
+  densidade da mana natural, e o arranjo se desfaz abaixo de 10. O Gatilho vira armadilha (até 3 por jogador).
+- **Pergaminhos de runa** em baús de estruturas (chance de 25%, lida da config na hora).
+- **Maestria:** 2 runas e 3 slots no começo; 3 runas com 50 conjurações; 5 runas e 5 slots com 200.
+- Comando `/runeheart runes` (e `grant`, `reset`, `casts` para operadores).
+- Teclas padrão sem colidir com o ChronoBubble: a concentração passou de V para R.
+- Protocolo de rede 3.
+- **Absorção.** Segurando a tecla de concentração (R), parado, o jogador puxa a mana natural para a própria mana:
   3% da mana máxima por segundo com densidade 100, proporcional à densidade, gastando 2 de mana natural por segundo.
   Mexer-se ou levar dano quebra a concentração; abaixo de densidade 10 vem a sobrecarga (náusea e dano).
 - **Sintonia:** antes de absorver, é preciso ficar 2 minutos (somados) parado com o Mana Sense ligado num lugar com

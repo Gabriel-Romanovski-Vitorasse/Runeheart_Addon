@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -13,8 +14,9 @@ import org.lwjgl.glfw.GLFW;
 
 /** Cliente: a tecla de concentração (absorção). Avisa o servidor quando ela é apertada e quando é solta. */
 public final class ClientFocus {
-    public static final KeyBinding FOCUS = new KeyBinding("key.runeheart.focus", InputMappings.Type.KEYSYM,
-            GLFW.GLFW_KEY_V, "key.categories.runeheart");
+    /** Padr\u00e3o R: o ChronoBubble j\u00e1 usa V, B, K e Alt; o Block Clover usa 1 a 8 e G (Curios). */
+    public static final KeyBinding FOCUS = new KeyBinding("key.runeheart.focus", KeyConflictContext.IN_GAME,
+            InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.categories.runeheart");
 
     private static boolean sentDown;
 

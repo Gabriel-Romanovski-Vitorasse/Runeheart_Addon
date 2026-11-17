@@ -31,7 +31,8 @@ public final class BlockCloverBridge {
 
     private static boolean tried, statsOk, abilitiesOk, syncOk;
     private static Method statsGet, getMana, setMana, getMaxMana;
-    private static Method abilityGet, getUnlockedAll, getUnlockedByCore, isContinuous;
+    private static Method abilityGet, getUnlockedAll, getUnlockedByCore, getEquippedAll, isContinuous;
+    private static Class<?> manaSenseClass;
     private static Object coreManaSense;
     private static Method sendTo;
     private static Constructor<?> statsPacket;
@@ -58,8 +59,10 @@ public final class BlockCloverBridge {
                 abilityGet = capAbility.getMethod("get", LivingEntity.class);
                 getUnlockedAll = data.getMethod("getUnlockedAbilities");
                 getUnlockedByCore = data.getMethod("getUnlockedAbility", core);
+                getEquippedAll = data.getMethod("getEquippedAbilities");
                 isContinuous = Class.forName(CLS_CONTINUOUS).getMethod("isContinuous");
-                coreManaSense = Class.forName(CLS_MANA_SENSE).getField("INSTANCE").get(null);
+                manaSenseClass = Class.forName(CLS_MANA_SENSE);
+                coreManaSense = manaSenseClass.getField("INSTANCE").get(null);
                 abilitiesOk = true;
             } catch (Throwable ignored) {
                 // sem habilidades: Mana Sense e Mana Zone contam como ausentes
@@ -132,13 +135,22 @@ public final class BlockCloverBridge {
         }
     }
 
-    /** O jogador tem o Mana Sense do Block Clover e ele está ligado agora. */
+    /**
+     * O jogador tem o Mana Sense do Block Clover ligado agora.
+     * <p>
+     * O estado "ligado" fica na c\u00f3pia da habilidade que est\u00e1 na combat bar (a equipada), que nem sempre \u00e9 o mesmo
+     * objeto da lista de habilidades aprendidas: por isso olha primeiro as equipadas.
+     */
     public static boolean isManaSenseActive(PlayerEntity player) {
         init();
         if (!abilitiesOk) return false;
         try {
             Object data = abilityGet.invoke(null, player);
-            Object sense = data == null ? null : getUnlockedByCore.invoke(data, coreManaSense);
+            if (data == null) return false;
+            for (Object ability : (List<?>) getEquippedAll.invoke(data)) {
+                if (manaSenseClass.isInstance(ability) && (Boolean) isContinuous.invoke(ability)) return true;
+            }
+            Object sense = getUnlockedByCore.invoke(data, coreManaSense);
             return sense != null && (Boolean) isContinuous.invoke(sense);
         } catch (Throwable t) {
             return false;
