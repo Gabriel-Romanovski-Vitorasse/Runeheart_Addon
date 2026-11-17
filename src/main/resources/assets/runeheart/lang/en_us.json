@@ -55,7 +55,7 @@
   "key.categories.runeheart": "Runeheart",
   "msg.runeheart.abs_disabled": "Absorption is turned off on this server.",
   "msg.runeheart.abs_no_mana_stats": "Could not read your Block Clover mana.",
-  "msg.runeheart.abs_not_attuned": "You cannot sense natural mana yet: stand still with Mana Sense on in a place with density %s or more.",
+  "msg.runeheart.abs_not_attuned": "You cannot sense natural mana yet: stand still with Mana Sense on in a place with density %s or more. Mana Sense: %s · density here: %s · attunement: %s/%s s",
   "msg.runeheart.abs_broken_move": "Focus broken: you moved. Release and hold the key again.",
   "msg.runeheart.abs_broken_hurt": "Focus broken: you took damage. Release and hold the key again.",
   "msg.runeheart.abs_active": "Absorbing: +%s mana/s · natural mana %s",
@@ -189,5 +189,7 @@
   "rune.runeheart.trigger": "Trigger",
   "rune.runeheart.trigger.desc": "Becomes a trap on the ground where you aim: fires on whoever steps on it.",
   "rune.runeheart.multiple": "Multiple",
-  "rune.runeheart.multiple.desc": "Three bolts in a fan (Bolt only)."
+  "rune.runeheart.multiple.desc": "Three bolts in a fan (Bolt only).",
+  "msg.runeheart.sense_on": "on",
+  "msg.runeheart.sense_off": "off"
 }

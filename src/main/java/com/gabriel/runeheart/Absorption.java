@@ -74,7 +74,12 @@ public final class Absorption {
             Msg.bar(player, TextFormatting.GRAY, "abs_no_mana_stats");
         } else if (!isAttuned(player)) {
             s.broken = true;
-            Msg.bar(player, TextFormatting.GRAY, "abs_not_attuned", RuneConfig.ABS_ATTUNEMENT_DENSITY.get());
+            boolean sensing = BlockCloverBridge.isManaSenseActive(player);
+            float density = NaturalMana.density(player.getLevel(), player.blockPosition());
+            Msg.bar(player, TextFormatting.GRAY, "abs_not_attuned", RuneConfig.ABS_ATTUNEMENT_DENSITY.get(),
+                    Msg.tr(sensing ? TextFormatting.GREEN : TextFormatting.RED, sensing ? "sense_on" : "sense_off"),
+                    Math.round(density), player.getPersistentData().getInt(TAG_ATTUNE_SECONDS),
+                    RuneConfig.ABS_ATTUNEMENT_SECONDS.get());
         }
     }
 

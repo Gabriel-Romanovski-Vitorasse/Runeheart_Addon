@@ -55,7 +55,7 @@
   "key.categories.runeheart": "Runeheart",
   "msg.runeheart.abs_disabled": "A absorção está desligada neste servidor.",
   "msg.runeheart.abs_no_mana_stats": "Não foi possível ler a sua mana do Block Clover.",
-  "msg.runeheart.abs_not_attuned": "Você ainda não sente a mana natural: fique parado com o Mana Sense ligado num lugar com densidade %s ou mais.",
+  "msg.runeheart.abs_not_attuned": "Você ainda não sente a mana natural: fique parado com o Mana Sense ligado num lugar com densidade %s ou mais. Mana Sense: %s · densidade aqui: %s · sintonia: %s/%s s",
   "msg.runeheart.abs_broken_move": "A concentração quebrou: você se mexeu. Solte e segure a tecla de novo.",
   "msg.runeheart.abs_broken_hurt": "A concentração quebrou: você levou dano. Solte e segure a tecla de novo.",
   "msg.runeheart.abs_active": "Absorvendo: +%s de mana/s · mana natural %s",
@@ -189,5 +189,7 @@
   "rune.runeheart.trigger": "Gatilho",
   "rune.runeheart.trigger.desc": "Vira armadilha no chão onde você mira: dispara em quem pisar.",
   "rune.runeheart.multiple": "Múltiplo",
-  "rune.runeheart.multiple.desc": "Três disparos em leque (só com Disparo)."
+  "rune.runeheart.multiple.desc": "Três disparos em leque (só com Disparo).",
+  "msg.runeheart.sense_on": "ligado",
+  "msg.runeheart.sense_off": "desligado"
 }
