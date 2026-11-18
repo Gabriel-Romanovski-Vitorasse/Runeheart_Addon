@@ -31,6 +31,8 @@ public final class ClientRunes {
 
     static int known, selected, maxRunes = 2, slots = 3, casts;
     static String[] texts = new String[RuneData.MAX_SLOTS];
+    /** Magias equipadas do Block Clover que aceitam inscri\u00e7\u00e3o: chave, nome e runas inscritas. */
+    static String[] spellKeys = new String[0], spellNames = new String[0], spellInscriptions = new String[0];
 
     static {
         java.util.Arrays.fill(texts, "");
@@ -47,8 +49,13 @@ public final class ClientRunes {
         casts = p.casts;
         java.util.Arrays.fill(texts, "");
         System.arraycopy(p.texts, 0, texts, 0, Math.min(p.texts.length, texts.length));
+        spellKeys = p.spellKeys;
+        spellNames = p.spellNames;
+        spellInscriptions = p.spellInscriptions;
         if (Minecraft.getInstance().screen instanceof ArrangementScreen) {
             ((ArrangementScreen) Minecraft.getInstance().screen).onSync();
+        } else if (Minecraft.getInstance().screen instanceof InscriptionScreen) {
+            ((InscriptionScreen) Minecraft.getInstance().screen).onSync();
         }
     }
 
@@ -81,7 +88,10 @@ public final class ClientRunes {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null || mc.getConnection() == null) return;
             while (OPEN.consumeClick()) {
-                if (mc.screen == null) mc.setScreen(new ArrangementScreen());
+                if (mc.screen == null) {
+                    send(RuneActionPacket.REFRESH, 0, "");                     // magias equipadas podem ter mudado
+                    mc.setScreen(new ArrangementScreen());
+                }
             }
             while (NEXT.consumeClick()) send(RuneActionPacket.NEXT, 0, "");
             while (CAST.consumeClick()) send(RuneActionPacket.CAST, 0, "");
@@ -93,6 +103,9 @@ public final class ClientRunes {
             selected = 0;
             casts = 0;
             java.util.Arrays.fill(texts, "");
+            spellKeys = new String[0];
+            spellNames = new String[0];
+            spellInscriptions = new String[0];
         }
     }
 

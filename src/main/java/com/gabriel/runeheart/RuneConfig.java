@@ -126,6 +126,12 @@ public final class RuneConfig {
     public static final ForgeConfigSpec.DoubleValue MM_TRAP_SECONDS;
     public static final ForgeConfigSpec.IntValue MM_TRAPS_PER_PLAYER;
     public static final ForgeConfigSpec.DoubleValue MM_SCROLL_CHANCE;
+    public static final ForgeConfigSpec.BooleanValue INSC_ENABLED;
+    public static final ForgeConfigSpec.IntValue INSC_RECHARGE;
+    public static final ForgeConfigSpec.DoubleValue INSC_SPLASH;
+    public static final ForgeConfigSpec.DoubleValue INSC_ON_HIT;
+    public static final ForgeConfigSpec.IntValue INSC_MULTIPLE;
+    public static final ForgeConfigSpec.BooleanValue INSC_MASTERY;
     public static final ForgeConfigSpec.IntValue HUD_X;
     public static final ForgeConfigSpec.IntValue HUD_Y;
     public static final ForgeConfigSpec.BooleanValue PARTICLES;
@@ -183,6 +189,15 @@ public final class RuneConfig {
         MM_TRAP_SECONDS = dbl(s, "trap_seconds", "Quanto tempo uma armadilha do Gatilho espera algu\u00e9m pisar", 60.0, 1.0, 3600.0);
         MM_TRAPS_PER_PLAYER = integer(s, "traps_per_player", "Armadilhas ativas ao mesmo tempo por jogador (a mais antiga some)", 3, 1, 50);
         MM_SCROLL_CHANCE = dbl(s, "scroll_chest_chance", "Chance de um ba\u00fa de estrutura (masmorra, templo, mina, fortaleza...) ter um pergaminho de runa", 0.25, 0.0, 1.0);
+        s.pop();
+
+        section(s, "inscription", true, "Inscri\u00e7\u00e3o de runas nas magias do Block Clover (menos Anti-Magia e Tempo): a magia \u00e9 o n\u00facleo e as runas inscritas a melhoram. A for\u00e7a vem da mana natural, como no Mana Method; os n\u00fameros de Selo, Cura, Barreira, Impulso, Amplia\u00e7\u00e3o e Dura\u00e7\u00e3o s\u00e3o os da se\u00e7\u00e3o mana_method");
+        INSC_ENABLED = bool(s, "enabled", "Liga/desliga a inscri\u00e7\u00e3o", true);
+        INSC_RECHARGE = integer(s, "recharge_ticks", "A for\u00e7a de uma magia inscrita \u00e9 medida (e a mana natural cobrada) no m\u00e1ximo uma vez nesse intervalo; golpes e proj\u00e9teis dentro dele usam a mesma for\u00e7a", 40, 1, 6000);
+        INSC_SPLASH = dbl(s, "splash_fraction", "Fra\u00e7\u00e3o do dano do acerto que a Amplia\u00e7\u00e3o causa em quem est\u00e1 em volta do alvo", 0.5, 0.0, 5.0);
+        INSC_ON_HIT = dbl(s, "on_hit_fraction", "Fra\u00e7\u00e3o da Cura e da Barreira do Mana Method que cada acerto inscrito d\u00e1 (no m\u00e1ximo uma vez por segundo)", 0.35, 0.0, 5.0);
+        INSC_MULTIPLE = integer(s, "multiple_count", "Proj\u00e9teis extras (em leque) que a runa M\u00faltiplo cria numa magia de proj\u00e9til", 2, 0, 8);
+        INSC_MASTERY = bool(s, "counts_for_mastery", "true = cada recarga de uma magia inscrita conta como uma conjura\u00e7\u00e3o para a maestria", true);
         s.pop();
         SERVER_SPEC = s.build();
 

@@ -39,14 +39,24 @@ public final class RuneTraps {
         final Arrangement inner;
         final float strength;
         final long expires;
+        /** Armadilha de magia inscrita (Gatilho numa magia do Block Clover): as runas e o dano do golpe. */
+        final Inscription inscription;
+        final float damage;
 
         Trap(RegistryKey<World> dim, Vector3d at, UUID owner, Arrangement inner, float strength, long expires) {
+            this(dim, at, owner, inner, strength, expires, null, 0.0F);
+        }
+
+        Trap(RegistryKey<World> dim, Vector3d at, UUID owner, Arrangement inner, float strength, long expires,
+             Inscription inscription, float damage) {
             this.dim = dim;
             this.at = at;
             this.owner = owner;
             this.inner = inner;
             this.strength = strength;
             this.expires = expires;
+            this.inscription = inscription;
+            this.damage = damage;
         }
     }
 
@@ -67,15 +77,28 @@ public final class RuneTraps {
         }
         Vector3d at = Vector3d.atBottomCenterOf(hit.getBlockPos().relative(hit.getDirection()));
         int lifetime = RuneMath.ticks(RuneConfig.MM_TRAP_SECONDS.get(), a.has(Rune.DURATION), RuneConfig.MM_DURATION_MULT.get());
-        // limite por jogador: tira a mais antiga dele
-        List<Trap> mine = new ArrayList<>();
-        for (Trap t : TRAPS) if (t.owner.equals(p.getUUID())) mine.add(t);
-        while (mine.size() >= RuneConfig.MM_TRAPS_PER_PLAYER.get()) TRAPS.remove(mine.remove(0));
+        makeRoom(p);
         TRAPS.add(new Trap(p.level.dimension(), at, p.getUUID(), a.without(Rune.TRIGGER), strength,
                 p.level.getGameTime() + lifetime));
         p.level.playSound(null, at.x, at.y, at.z, SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 0.8F, 0.7F);
         Msg.bar(p, TextFormatting.AQUA, "mm_trap_set", Msg.f1(lifetime / 20.0D));
         return true;
+    }
+
+    /** Limite por jogador: tira a armadilha mais antiga dele. */
+    private static void makeRoom(ServerPlayerEntity p) {
+        List<Trap> mine = new ArrayList<>();
+        for (Trap t : TRAPS) if (t.owner.equals(p.getUUID())) mine.add(t);
+        while (mine.size() >= RuneConfig.MM_TRAPS_PER_PLAYER.get()) TRAPS.remove(mine.remove(0));
+    }
+
+    /** Armadilha de uma magia inscrita com Gatilho, onde o proj\u00e9til bateu. */
+    static void placeInscribed(ServerPlayerEntity p, Vector3d at, String spellName, Inscription insc, float strength, float damage) {
+        int lifetime = RuneMath.ticks(RuneConfig.MM_TRAP_SECONDS.get(), insc.has(Rune.DURATION), RuneConfig.MM_DURATION_MULT.get());
+        makeRoom(p);
+        TRAPS.add(new Trap(p.level.dimension(), at, p.getUUID(), null, strength, p.level.getGameTime() + lifetime, insc, damage));
+        p.level.playSound(null, at.x, at.y, at.z, SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 0.8F, 0.7F);
+        Msg.bar(p, TextFormatting.AQUA, "insc_trap_set", spellName, Msg.f1(lifetime / 20.0D));
     }
 
     @SubscribeEvent
@@ -100,7 +123,8 @@ public final class RuneTraps {
             for (LivingEntity e : w.getEntitiesOfClass(LivingEntity.class, box)) {
                 if (!e.isAlive() || e.getUUID().equals(t.owner) || e.isSpectator()) continue;
                 PlayerEntity owner = w.getServer().getPlayerList().getPlayer(t.owner);
-                RuneEffects.trap(w, owner, e, t.inner, t.strength);
+                if (t.inscription != null) InscriptionHandler.trapHit(w, owner, e, t.inscription, t.strength, t.damage);
+                else RuneEffects.trap(w, owner, e, t.inner, t.strength);
                 w.sendParticles(ParticleTypes.END_ROD, t.at.x, t.at.y + 0.2D, t.at.z, 20, 0.6D, 0.1D, 0.6D, 0.1D);
                 w.playSound(null, t.at.x, t.at.y, t.at.z, SoundEvents.EVOKER_FANGS_ATTACK, SoundCategory.PLAYERS, 0.8F, 1.4F);
                 it.remove();

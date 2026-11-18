@@ -26,6 +26,8 @@ public final class BlockCloverBridge {
     private static final String PKG = "com.yuanno.block_clover.";
     public static final String CLS_MANA_SENSE = PKG + "spells.misc.ManaSenseAbility";
     public static final String CLS_CONTINUOUS = PKG + "api.ability.sorts.ContinuousAbility";
+    public static final String CLS_ABILITY_DAMAGE = PKG + "damagesource.AbilityDamageSource";
+    public static final String CLS_PROJECTILE = PKG + "api.ability.AbilityProjectileEntity";
     /** Toda Mana Zone do Block Clover (uma por atributo) tem este pedaço no nome da classe. */
     public static final String MANA_ZONE_NAME = "ManaZone";
 
@@ -35,6 +37,12 @@ public final class BlockCloverBridge {
     private static Class<?> manaSenseClass;
     private static Object coreManaSense;
     private static Method sendTo;
+    // inscri\u00e7\u00e3o: de qual magia veio um dano ou um proj\u00e9til
+    private static boolean spellsOk;
+    private static Class<?> damageClass, projectileClass;
+    private static Method damageAbility, coreAbilityClass, coreName, abilityGetCore;
+    private static Method projDamage, projMaxLife, projSetMaxLife, projSetThrower;
+    private static java.lang.reflect.Field projSource;
     private static Constructor<?> statsPacket;
 
     private BlockCloverBridge() {
@@ -66,6 +74,24 @@ public final class BlockCloverBridge {
                 abilitiesOk = true;
             } catch (Throwable ignored) {
                 // sem habilidades: Mana Sense e Mana Zone contam como ausentes
+            }
+
+            try {
+                Class<?> core = Class.forName(PKG + "api.ability.AbilityCore");
+                damageClass = Class.forName(CLS_ABILITY_DAMAGE);
+                damageAbility = damageClass.getMethod("getAbilitySource");
+                coreAbilityClass = core.getMethod("getAbilityClass");
+                coreName = core.getMethod("getName");
+                abilityGetCore = Class.forName(PKG + "api.ability.Ability").getMethod("getCore");
+                projectileClass = Class.forName(CLS_PROJECTILE);
+                projSource = projectileClass.getField("source");
+                projDamage = projectileClass.getMethod("getDamage");
+                projMaxLife = projectileClass.getMethod("getMaxLife");
+                projSetMaxLife = projectileClass.getMethod("setMaxLife", int.class);
+                projSetThrower = projectileClass.getMethod("setThrower", LivingEntity.class);
+                spellsOk = true;
+            } catch (Throwable ignored) {
+                // sem isso a inscri\u00e7\u00e3o n\u00e3o tem como saber de qual magia veio um golpe: fica desligada
             }
 
             try {
@@ -173,6 +199,102 @@ public final class BlockCloverBridge {
         }
     }
 
+    // ---------- Magias (inscri\u00e7\u00e3o) ----------
+
+    /** Uma magia do Block Clover: chave salva no jogador (nome da classe) e nome para mostrar. */
+    public static final class Spell {
+        public final String key, name;
+
+        Spell(String key, String name) {
+            this.key = key;
+            this.name = name;
+        }
+    }
+
+    /** Magia de um "AbilityCore" do Block Clover, se ela aceita inscri\u00e7\u00e3o (sen\u00e3o null). */
+    private static Spell spellOfCore(Object core) throws Exception {
+        if (core == null) return null;
+        Class<?> cls = (Class<?>) coreAbilityClass.invoke(core);
+        if (cls == null || !Inscription.eligible(cls.getName())) return null;
+        return new Spell(cls.getSimpleName(), String.valueOf(coreName.invoke(core)));
+    }
+
+    /** De qual magia (que aceita inscri\u00e7\u00e3o) veio este dano, ou null. */
+    public static Spell spellOfDamage(net.minecraft.util.DamageSource source) {
+        init();
+        if (!spellsOk || source == null || !damageClass.isInstance(source)) return null;
+        try {
+            return spellOfCore(damageAbility.invoke(source));
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public static boolean isSpellProjectile(net.minecraft.entity.Entity e) {
+        init();
+        return spellsOk && e != null && projectileClass.isInstance(e);
+    }
+
+    /** De qual magia (que aceita inscri\u00e7\u00e3o) veio este proj\u00e9til, ou null. */
+    public static Spell spellOfProjectile(net.minecraft.entity.Entity e) {
+        if (!isSpellProjectile(e)) return null;
+        try {
+            return spellOfDamage((net.minecraft.util.DamageSource) projSource.get(e));
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public static float projectileDamage(net.minecraft.entity.Entity e) {
+        if (!isSpellProjectile(e)) return 0.0F;
+        try {
+            return (Float) projDamage.invoke(e);
+        } catch (Throwable t) {
+            return 0.0F;
+        }
+    }
+
+    /** Multiplica o tempo de vida (alcance) do proj\u00e9til. */
+    public static void scaleProjectileLife(net.minecraft.entity.Entity e, double factor) {
+        if (!isSpellProjectile(e)) return;
+        try {
+            int life = (Integer) projMaxLife.invoke(e);
+            if (life > 0) projSetMaxLife.invoke(e, (int) Math.round(life * factor));
+        } catch (Throwable ignored) {
+        }
+    }
+
+    /** Copia para {@code to} o dono e a fonte de dano do proj\u00e9til original (o que o NBT n\u00e3o carrega). */
+    public static void copyProjectileLinks(net.minecraft.entity.Entity from, net.minecraft.entity.Entity to, LivingEntity owner) {
+        if (!isSpellProjectile(from) || !isSpellProjectile(to)) return;
+        try {
+            projSource.set(to, projSource.get(from));
+            java.lang.reflect.Field bypass = projectileClass.getField("bypassingSource");
+            bypass.set(to, bypass.get(from));
+            if (owner != null) projSetThrower.invoke(to, owner);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    /** Magias equipadas na combat bar que aceitam inscri\u00e7\u00e3o (sem repetir). */
+    public static List<Spell> equippedSpells(PlayerEntity player) {
+        init();
+        List<Spell> list = new java.util.ArrayList<>();
+        if (!abilitiesOk || !spellsOk) return list;
+        try {
+            Object data = abilityGet.invoke(null, player);
+            if (data == null) return list;
+            java.util.Set<String> seen = new java.util.HashSet<>();
+            for (Object ability : (List<?>) getEquippedAll.invoke(data)) {
+                if (ability == null) continue;
+                Spell s = spellOfCore(abilityGetCore.invoke(ability));
+                if (s != null && seen.add(s.key)) list.add(s);
+            }
+        } catch (Throwable ignored) {
+        }
+        return list;
+    }
+
     /** Reenvia a mana ao cliente (a barra de mana do Block Clover). */
     public static void syncToClient(PlayerEntity player) {
         init();
@@ -194,8 +316,9 @@ public final class BlockCloverBridge {
             return;
         }
         init();
-        LOGGER.info("[Runeheart] Block Clover: mana {}, habilidades {}, sincronizacao {}", ok(statsOk), ok(abilitiesOk), ok(syncOk));
-        if (!statsOk || !abilitiesOk || !syncOk) {
+        LOGGER.info("[Runeheart] Block Clover: mana {}, habilidades {}, sincronizacao {}, magias (inscricao) {}",
+                ok(statsOk), ok(abilitiesOk), ok(syncOk), ok(spellsOk));
+        if (!statsOk || !abilitiesOk || !syncOk || !spellsOk) {
             LOGGER.warn("[Runeheart] Parte do Block Clover nao foi encontrada (versao diferente?). "
                     + "Os recursos que dependem dela ficam desligados.");
         }
